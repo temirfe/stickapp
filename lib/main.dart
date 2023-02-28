@@ -24,10 +24,10 @@ class MyApp extends StatelessWidget {
       ),
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
       //home: const SimplestExample(), //stick_it package
-      home: const CustomOne(),
+      //home: const CustomOne(),
       //home: const DragBox(),
       //home: const Custom3(), //slide horizontal
-      //home: const Custom4(),
+      home: const Custom4(),
       //home: const MyScale(),
       //home: InteractiveViewerExample(),
     );

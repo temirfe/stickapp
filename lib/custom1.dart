@@ -13,10 +13,8 @@ class _CustomOneState extends State<CustomOne> {
   double _scale = 0.5;
   double _initialRotate = 0;
   double _rotate = 0;
-  double finalScale = 1.0;
+  double finalScale = 0.5;
   double finalRotation = 0.0;
-  ScaleUpdateDetails? scaleUpdate;
-  ScaleStartDetails? scaleStart;
   final String _background =
       'https://images.unsplash.com/photo-1545147986-a9d6f2ab03b5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80';
 
@@ -24,24 +22,23 @@ class _CustomOneState extends State<CustomOne> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onScaleEnd: (details) {
-          print('scale end $details');
+          //print('onScaleEnd $details');
+          // print('end rotate $_rotate');
+          print('end scale $_scale');
+          finalRotation = _rotate;
+          finalScale = _scale;
         },
         onScaleStart: (details) {
-          print('scale start $details');
-          // you will need this in order to calculate difference
-          // in rotation and scale:
-          scaleStart = details;
+          //print('scale start $details');
           _initialScale = _scale;
           _initialRotate = _rotate;
         },
         onScaleUpdate: (ScaleUpdateDetails details) {
           //print('scale update $details');
           setState(() {
-            //finalScale = (scaleStart. - details.scale);
-            //finalRotation = details.rotation;
             _scale = _initialScale * details.scale;
             _rotate = _initialRotate + details.rotation;
-            print('rotation ${details.rotation}');
+            // print('rotation ${details.rotation}');
           });
         },
         child: Stack(children: [
