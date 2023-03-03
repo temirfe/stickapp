@@ -79,6 +79,8 @@ class _Custom4State extends State<Custom4> {
   double _rotate = 0;
   double finalScale = 1;
   double finalRotation = 0.0;
+  /* double multiply = 1; //problem was after enlarging the hitbox remained previous size
+  bool useMultiplier = false; */
 
   @override
   void initState() {
@@ -129,12 +131,120 @@ class _Custom4State extends State<Custom4> {
                   //print('horiz $_horizontalPos, vert $_verticalPos');
                 }, */
             onScaleEnd: (details) {
-              //print('onScaleEnd $details');
               // print('end rotate $_rotate');
               //print('end scale $_scale');
               finalRotation = _rotate;
               finalScale = _scale;
+              /* if (_scale != 1) {
+                useMultiplier = true;
+              } */
             },
+            onScaleStart: (details) {
+              //print('scale start $details');
+              _initialScale = _scale;
+              _initialRotate = _rotate;
+            },
+            onScaleUpdate: (ScaleUpdateDetails details) {
+              _verticalPos = (_verticalPos +
+                      details.focalPointDelta.dy / (context.size!.height - 55))
+                  .clamp(.0, 1.0);
+              _horizontalPos = (_horizontalPos +
+                      details.focalPointDelta.dx / (context.size!.width - 55))
+                  .clamp(.0, 1.0);
+              posValueListener.value = [_horizontalPos, _verticalPos];
+              setState(() {
+                _scale = _initialScale * details.scale;
+                _rotate = _initialRotate + details.rotation;
+                /* if (useMultiplier && _scale != 1) {
+                  multiply = _scale * 3;
+                } */
+                //print('scale $_scale, multiply $multiply');
+                // print('rotation ${details.rotation}');
+              });
+            },
+            child: Transform(
+                alignment: FractionalOffset.center,
+                //transform: Matrix4.diagonal3(Vect.Vector3(_scale, _scale, _scale))..rotateZ(_rotate),
+                transform:
+                    Matrix4.diagonal3(Vect.Vector3(_scale, _scale, _scale))
+                      ..rotateZ(_rotate),
+                child: Container(
+                  //margin: EdgeInsets.all(12),
+                  width: 110.0, //* multiply,
+                  height: 110.0, // * multiply,
+                  color: Colors.pink,
+                )),
+          );
+
+          /* return ValueListenableBuilder<List<double>>(
+              valueListenable: posValueListener,
+              builder:
+                  (BuildContext context, List<double> value, Widget? child) {
+                return Align(
+                  alignment: Alignment(value[0] * 2 - 1, value[1] * 2 - 1),
+                  child: handle,
+                );
+              },
+            ); */
+
+          return AnimatedBuilder(
+            animation: posValueListener,
+            builder: (context, child) {
+              return Align(
+                alignment: Alignment(posValueListener.value[0] * 2 - 1,
+                    posValueListener.value[1] * 2 - 1),
+                child: child,
+              );
+            },
+            child: handle,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class Custom5 extends StatelessWidget {
+  const Custom5({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Stack(children: <Widget>[
+      Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Colors.lightGreen,
+      ),
+      const _DynamicStick(),
+    ]));
+  }
+}
+
+class _DynamicStick extends StatefulWidget {
+  const _DynamicStick({super.key});
+
+  @override
+  State<_DynamicStick> createState() => _DynamicStickState();
+}
+
+class _DynamicStickState extends State<_DynamicStick> {
+  ValueNotifier<List<double>> posValueListener = ValueNotifier([0.0, 0.0]);
+  double _horizontalPos = 0.0;
+  double _verticalPos = 0.0;
+
+  double _initialScale = 1;
+  double _scale = 1;
+
+  double _initialRotate = 0;
+  double _rotate = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Builder(
+        builder: (context) {
+          final handle = GestureDetector(
             onScaleStart: (details) {
               //print('scale start $details');
               _initialScale = _scale;
@@ -165,21 +275,9 @@ class _Custom4State extends State<Custom4> {
                   //margin: EdgeInsets.all(12),
                   width: 110.0,
                   height: 110.0,
-                  color: Colors.pink,
+                  color: Colors.purple,
                 )),
           );
-
-          /* return ValueListenableBuilder<List<double>>(
-              valueListenable: posValueListener,
-              builder:
-                  (BuildContext context, List<double> value, Widget? child) {
-                return Align(
-                  alignment: Alignment(value[0] * 2 - 1, value[1] * 2 - 1),
-                  child: handle,
-                );
-              },
-            ); */
-
           return AnimatedBuilder(
             animation: posValueListener,
             builder: (context, child) {

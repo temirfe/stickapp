@@ -3,6 +3,7 @@ import 'package:image_editor/image_editor.dart';
 import 'package:stickapp/custom1.dart';
 import 'package:stickapp/custom2.dart';
 import 'package:stickapp/custom3.dart';
+import 'package:stickapp/custom6.dart';
 import 'package:stickapp/intera.dart';
 import 'package:stickapp/scalre.dart';
 import 'package:stickapp/stick_it_page.dart';
@@ -27,9 +28,11 @@ class MyApp extends StatelessWidget {
       //home: const CustomOne(),
       //home: const DragBox(),
       //home: const Custom3(), //slide horizontal
-      home: const Custom4(),
+      //home: const Custom4(),
+      //home: const Custom5(),
       //home: const MyScale(),
       //home: InteractiveViewerExample(),
+      home: GestureTest(),
     );
   }
 }
